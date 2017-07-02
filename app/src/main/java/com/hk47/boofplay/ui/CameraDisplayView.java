@@ -13,11 +13,10 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.ImageView;
-
-import com.hk47.boofplay.R;
 
 import java.io.IOException;
+
+import static android.R.attr.bitmap;
 
 public class CameraDisplayView extends SurfaceView implements SurfaceHolder.Callback,
         Camera.PreviewCallback {
@@ -29,7 +28,9 @@ public class CameraDisplayView extends SurfaceView implements SurfaceHolder.Call
 
     SurfaceHolder mHolder;
     Activity mActivity;
-    public Camera mCamera;
+    Camera mCamera;
+
+    public Bitmap mBitmap;
 
     public CameraDisplayView(Context context) {
         super(context);
@@ -125,21 +126,13 @@ public class CameraDisplayView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        Log.i("CAMERAZ", "onPreviewFrame called!");
-
-        Bitmap bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+        mBitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
         Allocation bmData = renderScriptNV21ToRGBA888(
                 mActivity,
-                200,
-                200,
+                400,
+                400,
                 data);
-        bmData.copyTo(bitmap);
-
-        if (bitmap != null) {
-            Log.i("CAMERAZ", "width: " + bitmap.getWidth() + " height: " + bitmap.getHeight());
-
-        }
-
+        bmData.copyTo(mBitmap);
     }
 
     public Allocation renderScriptNV21ToRGBA888(Context context, int width, int height, byte[] nv21) {
@@ -157,6 +150,10 @@ public class CameraDisplayView extends SurfaceView implements SurfaceHolder.Call
         yuvToRgbIntrinsic.setInput(in);
         yuvToRgbIntrinsic.forEach(out);
         return out;
+    }
+
+    public interface OnBitmapChanged {
+        public Bitmap onBitmapChanged();
     }
 
 

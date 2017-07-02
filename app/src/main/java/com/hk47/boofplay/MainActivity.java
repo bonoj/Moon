@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,11 +45,6 @@ public class MainActivity extends AppCompatActivity {
         mCameraDisplayView = new CameraDisplayView(this, this);
         mContainerView.addView(mCameraDisplayView);
 
-//        if (mCameraDisplayView.mCamera != null) {
-//            mCameraDisplayView.mCamera.setPreviewCallback(this);
-//        }
-
-
         GrayU8 image = new GrayU8(100, 150);
 
         int unchangedPixel = image.get(5,23);
@@ -62,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         pixelTest = pixelTest + "\nchangedPixel: " + changedPixel;
 
         mBoofTextView.setText(pixelTest);
-
-
 
     }
 
@@ -91,39 +85,7 @@ public class MainActivity extends AppCompatActivity {
         image.set(8, 26, 50);
     }
 
-//    @Override
-//    public void onPreviewFrame(byte[] data, Camera camera) {
-//        Log.i("CAMERAZ", "onPreviewFrame called!");
-//
-//        Bitmap bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
-//        Allocation bmData = renderScriptNV21ToRGBA888(
-//                this,
-//                200,
-//                200,
-//                data);
-//        bmData.copyTo(bitmap);
-//
-//        if (bitmap != null) {
-//            Log.i("CAMERAZ", "width: " + bitmap.getWidth() + " height: " + bitmap.getHeight());
-//            mBoofImageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 200, 200, true));
-//        }
-//
-//    }
-//
-//    public Allocation renderScriptNV21ToRGBA888(Context context, int width, int height, byte[] nv21) {
-//        RenderScript rs = RenderScript.create(context);
-//        ScriptIntrinsicYuvToRGB yuvToRgbIntrinsic = ScriptIntrinsicYuvToRGB.create(rs, Element.U8_4(rs));
-//
-//        Type.Builder yuvType = new Type.Builder(rs, Element.U8(rs)).setX(nv21.length);
-//        Allocation in = Allocation.createTyped(rs, yuvType.create(), Allocation.USAGE_SCRIPT);
-//
-//        Type.Builder rgbaType = new Type.Builder(rs, Element.RGBA_8888(rs)).setX(width).setY(height);
-//        Allocation out = Allocation.createTyped(rs, rgbaType.create(), Allocation.USAGE_SCRIPT);
-//
-//        in.copyFrom(nv21);
-//
-//        yuvToRgbIntrinsic.setInput(in);
-//        yuvToRgbIntrinsic.forEach(out);
-//        return out;
-//    }
+    public void getBitmap(View view) {
+        mBoofImageView.setImageBitmap(mCameraDisplayView.mBitmap);
+    }
 }
