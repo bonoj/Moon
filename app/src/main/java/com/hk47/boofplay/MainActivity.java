@@ -1,16 +1,26 @@
 package com.hk47.boofplay;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.hk47.boofplay.ui.CameraDisplayView;
 
 import boofcv.struct.image.GrayU8;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView mBoofTextView;
-    ImageView mBoofImageView;
+    public static final int RC_CAMERA_PERMISSION = 200;
+
+    private FrameLayout mContainerView;
+    private CameraDisplayView mCameraDisplayView;
+    private TextView mBoofTextView;
+    private ImageView mBoofImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +29,24 @@ public class MainActivity extends AppCompatActivity {
 
         mBoofTextView = (TextView) findViewById(R.id.boof_text_view);
         mBoofImageView = (ImageView) findViewById(R.id.boof_image_view);
+
+        mContainerView = (FrameLayout) findViewById(R.id.boof_container_view);
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.CAMERA}, RC_CAMERA_PERMISSION);
+        }
+
+
+
+        mCameraDisplayView = new CameraDisplayView(this, this);
+        mContainerView.addView(mCameraDisplayView);
+
+//        if (mCameraDisplayView.mCamera != null) {
+//            mCameraDisplayView.mCamera.setPreviewCallback(this);
+//        }
 
 
         GrayU8 image = new GrayU8(100, 150);
@@ -38,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
 
 
     // Gets and sets pixel at (5,23) to 50 (some grayscale value)
@@ -60,4 +90,40 @@ public class MainActivity extends AppCompatActivity {
         image.set(7, 26, 50);
         image.set(8, 26, 50);
     }
+
+//    @Override
+//    public void onPreviewFrame(byte[] data, Camera camera) {
+//        Log.i("CAMERAZ", "onPreviewFrame called!");
+//
+//        Bitmap bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888);
+//        Allocation bmData = renderScriptNV21ToRGBA888(
+//                this,
+//                200,
+//                200,
+//                data);
+//        bmData.copyTo(bitmap);
+//
+//        if (bitmap != null) {
+//            Log.i("CAMERAZ", "width: " + bitmap.getWidth() + " height: " + bitmap.getHeight());
+//            mBoofImageView.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 200, 200, true));
+//        }
+//
+//    }
+//
+//    public Allocation renderScriptNV21ToRGBA888(Context context, int width, int height, byte[] nv21) {
+//        RenderScript rs = RenderScript.create(context);
+//        ScriptIntrinsicYuvToRGB yuvToRgbIntrinsic = ScriptIntrinsicYuvToRGB.create(rs, Element.U8_4(rs));
+//
+//        Type.Builder yuvType = new Type.Builder(rs, Element.U8(rs)).setX(nv21.length);
+//        Allocation in = Allocation.createTyped(rs, yuvType.create(), Allocation.USAGE_SCRIPT);
+//
+//        Type.Builder rgbaType = new Type.Builder(rs, Element.RGBA_8888(rs)).setX(width).setY(height);
+//        Allocation out = Allocation.createTyped(rs, rgbaType.create(), Allocation.USAGE_SCRIPT);
+//
+//        in.copyFrom(nv21);
+//
+//        yuvToRgbIntrinsic.setInput(in);
+//        yuvToRgbIntrinsic.forEach(out);
+//        return out;
+//    }
 }
