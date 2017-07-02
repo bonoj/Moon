@@ -36,12 +36,7 @@ public class MainActivity extends AppCompatActivity {
         mBoofTextView.setText(pixelTest);
 
 
-        // TODO experiment with loading an image from resources
-//        List<BufferedImage> images = UtilImageIO.loadImages("path/to/images","jpg");
-//        GrayU8 gray = new GrayU8(1,1);
-//        for( BufferedImage image : images ) {
-//            ConvertBufferedImage.convertFrom(image,gray,true);
-//        }
+
     }
 
 
