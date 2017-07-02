@@ -16,8 +16,6 @@ import android.view.SurfaceView;
 
 import java.io.IOException;
 
-import static android.R.attr.bitmap;
-
 public class CameraDisplayView extends SurfaceView implements SurfaceHolder.Callback,
         Camera.PreviewCallback {
 
@@ -126,11 +124,11 @@ public class CameraDisplayView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        mBitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
+        mBitmap = Bitmap.createBitmap(800, 800, Bitmap.Config.ARGB_8888);
         Allocation bmData = renderScriptNV21ToRGBA888(
                 mActivity,
-                400,
-                400,
+                800,
+                800,
                 data);
         bmData.copyTo(mBitmap);
     }
@@ -151,10 +149,4 @@ public class CameraDisplayView extends SurfaceView implements SurfaceHolder.Call
         yuvToRgbIntrinsic.forEach(out);
         return out;
     }
-
-    public interface OnBitmapChanged {
-        public Bitmap onBitmapChanged();
-    }
-
-
 }
