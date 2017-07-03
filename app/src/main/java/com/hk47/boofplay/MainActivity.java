@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
         mCameraDisplayView = new CameraDisplayView(this, this);
         mContainerView.addView(mCameraDisplayView);
+
 
         GrayU8 image = new GrayU8(100, 150);
 

@@ -3,6 +3,10 @@ package com.hk47.boofplay.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.hardware.Camera;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -14,6 +18,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class CameraDisplayView extends SurfaceView implements SurfaceHolder.Callback,
@@ -124,13 +129,31 @@ public class CameraDisplayView extends SurfaceView implements SurfaceHolder.Call
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-        mBitmap = Bitmap.createBitmap(800, 800, Bitmap.Config.ARGB_8888);
-        Allocation bmData = renderScriptNV21ToRGBA888(
-                mActivity,
-                800,
-                800,
-                data);
-        bmData.copyTo(mBitmap);
+
+        // Convert data to boof object
+//        ConvertNV21.nv21ToBoof(data, 800, 800, );
+
+        // Convert to jpeg
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Camera.Size previewSize = camera.getParameters().getPreviewSize();
+        YuvImage yuvImage = new YuvImage(
+                data,
+                ImageFormat.NV21,
+                previewSize.width,
+                previewSize.height, null);
+        yuvImage.compressToJpeg(new Rect(0,0, previewSize.width, previewSize.height), 80, baos);
+        byte[] jdata = baos.toByteArray();
+
+        mBitmap = BitmapFactory.decodeByteArray(jdata, 0, jdata.length);
+
+
+//        mBitmap = Bitmap.createBitmap(800, 800, Bitmap.Config.ARGB_8888);
+//        Allocation bmData = renderScriptNV21ToRGBA888(
+//                mActivity,
+//                800,
+//                800,
+//                data);
+//        bmData.copyTo(mBitmap);
     }
 
     public Allocation renderScriptNV21ToRGBA888(Context context, int width, int height, byte[] nv21) {
