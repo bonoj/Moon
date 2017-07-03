@@ -1,9 +1,7 @@
 package com.hk47.boofplay;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -28,39 +26,41 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mBoofTextView = (TextView) findViewById(R.id.boof_text_view);
-        mBoofImageView = (ImageView) findViewById(R.id.boof_image_view);
+//        mBoofTextView = (TextView) findViewById(R.id.boof_text_view);
+//        mBoofImageView = (ImageView) findViewById(R.id.boof_image_view);
+//
+//        mContainerView = (FrameLayout) findViewById(R.id.boof_container_view);
+//
+//        if (ActivityCompat.checkSelfPermission(this,
+//                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+//
+//            ActivityCompat.requestPermissions(this, new String[]{
+//                    Manifest.permission.CAMERA}, RC_CAMERA_PERMISSION);
+//        }
+//
+//
+//        mCameraDisplayView = new CameraDisplayView(this, this);
+//        mContainerView.addView(mCameraDisplayView);
+//
+//
+//        GrayU8 image = new GrayU8(100, 150);
+//
+//        int unchangedPixel = image.get(5,23);
+//
+//        String pixelTest = "unchangedPixel: " + unchangedPixel;
+//
+//        changeSinglePixel(image);
+//
+//        int changedPixel = image.get(5,23);
+//
+//        pixelTest = pixelTest + "\nchangedPixel: " + changedPixel;
+//
+//        mBoofTextView.setText(pixelTest);
 
-        mContainerView = (FrameLayout) findViewById(R.id.boof_container_view);
-
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.CAMERA}, RC_CAMERA_PERMISSION);
-        }
-
-
-        mCameraDisplayView = new CameraDisplayView(this, this);
-        mContainerView.addView(mCameraDisplayView);
-
-
-        GrayU8 image = new GrayU8(100, 150);
-
-        int unchangedPixel = image.get(5,23);
-
-        String pixelTest = "unchangedPixel: " + unchangedPixel;
-
-        changeSinglePixel(image);
-
-        int changedPixel = image.get(5,23);
-
-        pixelTest = pixelTest + "\nchangedPixel: " + changedPixel;
-
-        mBoofTextView.setText(pixelTest);
+        Intent intent = new Intent(this, VideoActivity.class);
+        startActivity(intent);
 
     }
-
 
 
 
